@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import axios from 'axios';
+import AppModal from '../../../components/AppModal';
+import PrimaryButton from '../../../components/PrimaryButton';
 
 export default function StackPage() {
   const [operations, setOperations] = useState("push 5\npush 10\npop");
@@ -9,6 +11,8 @@ export default function StackPage() {
   const [steps, setSteps] = useState<string[]>([]);
   const [pseudocode, setPseudocode] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   const handleRun = async () => {
     setLoading(true);
@@ -20,7 +24,8 @@ export default function StackPage() {
       setSteps(data.steps);
       setPseudocode(data.pseudocode);
     } catch (err: any) {
-      alert('Error: ' + err.message);
+      setModalMessage('Error: ' + err.message);
+      setModalOpen(true);
     } finally {
       setLoading(false);
     }
@@ -29,7 +34,7 @@ export default function StackPage() {
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold">Stack Simulator</h2>
-      <div className="flex gap-4 items-end">
+      <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-end">
         <div className="flex-1">
           <label className="block mb-1 font-medium">Operations</label>
           <textarea
@@ -39,13 +44,9 @@ export default function StackPage() {
             rows={5}
           />
         </div>
-        <button
-          onClick={handleRun}
-          disabled={loading}
-          className="h-10 px-4 bg-blue-600 text-white rounded hover:bg-blue-700"
-        >
+        <PrimaryButton onClick={handleRun} disabled={loading}>
           {loading ? 'Running...' : 'Run'}
-        </button>
+        </PrimaryButton>
       </div>
 
       {result && (
@@ -72,6 +73,13 @@ export default function StackPage() {
           <pre className="p-4 bg-gray-100 rounded overflow-x-auto text-sm font-mono">{pseudocode}</pre>
         </div>
       )}
+
+      <AppModal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        title="Error"
+        description={modalMessage}
+      />
     </div>
   );
 }

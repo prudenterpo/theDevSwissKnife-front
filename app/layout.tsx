@@ -1,11 +1,11 @@
 import "../styles/globals.css";
-import LayoutWrapper from "../components/LayoutWrapper";
+import SidebarLayout from "../components/SidebarLayout";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="bg-gray-50 text-gray-900">
-        <LayoutWrapper>{children}</LayoutWrapper>
+      <body>
+        <SidebarLayout>{children}</SidebarLayout>
       </body>
     </html>
   );
